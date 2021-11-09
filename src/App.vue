@@ -2,12 +2,14 @@
   <div id="app">
     <ul>
         <li
-         v-for="user in currentPageUsers" :key="user.id" >
+         v-for="(user,index) in currentPageUsers" :key="user.id"
+          >
           {{ user.id}}
          {{ user.name }}
           {{ user.gender }}
            {{ user.species }}
-           
+         <button class="rm"
+         v-on:click="currentPageUsers.splice(index, 1)">&times; </button>
   
     </li>
     </ul>
@@ -19,92 +21,21 @@
           </button>
         </li>
       </ul> 
-                   
-              
-    <el-row>
-  <el-col :span="6">
-    <div class="grid-content bg-purple-dark">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia voluptatibus distinctio natus placeat ratione accusamus dolorem quibusdam, dolores itaque esse? Facere voluptate voluptas nostrum, modi suscipit enim odit earum fugiat sint magnam! 
-      Suscipit accusamus aspernatur ipsum ipsa, ad soluta.
-      </div>
-      </el-col>
-       <el-col :span="6">
-    <div class="grid-content bg-purple-dark">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates mollitia voluptatibus distinctio natus placeat ratione accusamus dolorem quibusdam, dolores itaque esse? Facere voluptate voluptas nostrum, modi suscipit enim odit earum fugiat sint magnam! 
-      Suscipit accusamus aspernatur ipsum ipsa, ad soluta.
-      </div>
-      <div>
-      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-  <el-form-item label="Пароль" prop="pass">
-    <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
- </el-form-item>
-  
-  <el-form-item
-    prop="email"
-    label="Электронная почта"
-    :rules="[
-      { required: true, message: 'Введите email адрес', trigger: 'blur' },
-      { type: 'email', message: 'Введите корректный email адрес', trigger: ['blur', 'change'] }
-    ]"
-  >
-    <el-input v-model="ruleForm.email"></el-input>
-  </el-form-item>
-  
-    <el-button type="primary" @click="submitForm('ruleForm')">Авторизация</el-button>
-    
-</el-form>  
-      </div>
-      </el-col>
-
-     
-   </el-row>
-   <el-container class="container">
-     <el-main>
-     
-      
-  <br>
-  <el-button type="primary" @click="handleClick">Primary</el-button>
-     </el-main>
-   </el-container>
-  
-  
-
+   <router-view />                
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 
-
 export default{
   name:'app',
   data(){
-     var validatePass2 = (rule, value, callback) => {
-        if (value === '')  {
-          callback(new Error('Введите пароль'));
-        } else if (value !== this.ruleForm.pass) {
-          callback(new Error('Пароль должен содержать не менее 8 символов'));
-        } else {
-          callback();
-        }
-      };
+    
 return{
    results: [],
       usersPerPage: 5,
-      currentPage: 1,
-   ruleForm: {
-          pass: '',
-          email: ''
-                 
-        },
-         rules: {
-          pass: [
-            { validator: validatePass2, trigger: 'blur' },
-             { required: true, message: 'Пароль должен содержать не менее 8 символов', trigger: 'blur' },
-            {  min:8, message: 'Пароль должен содержать не менее 8 символов', trigger: 'blur' }
-          ]
-        },
-       
+      currentPage: 1      
 
 }
   },
@@ -138,16 +69,8 @@ return{
   handleClick(){
     console.log('handling');
   },
-   submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
+  
+   
        changePage(pageNumber) {
       if (pageNumber !== this.currentPage) this.currentPage = pageNumber;
     }
@@ -162,7 +85,7 @@ return{
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -176,15 +99,15 @@ return{
 }
 
 li {
-  margin: 8px 0;
+border: 1px solid #ccc;
+display:flex;
+justify-content: space-between;
+padding: .5rem 2 rem;
+margin-bottom: 1rem;
+margin: 8px 0;
 }
-h2 {
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-del {
-  color: rgba(0, 0, 0, 0.3);
-}
+
+
 li.inline {
   display: inline;
 }
@@ -192,5 +115,16 @@ li.inline {
 .container{
   max-width: 1200px;
   margin:auto;
+}
+ul{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+.rm{
+  background: red;
+  color: #fff;
+  border-radius: 50%;
+  font-weight:bold;
 }
 </style>
